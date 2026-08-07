@@ -31,17 +31,26 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // 3. Route Khusus User Pelanggan
 Route::middleware(['auth', 'role:user'])->group(function () {
-    // Beranda / Katalog Utama
+    // Beranda / Katalog Utama (Milik Teman)
     Route::get('/user/dashboard', [UserController::class, 'index'])->name('user.dashboard');
     
-    // Halaman Profil & Garasi Digital
+    // Halaman Profil & Garasi Digital (Milik Teman)
     Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
     Route::put('/user/profile', [UserController::class, 'updateProfile'])->name('user.profile.update');
+
+    // Katalog untuk User (Modul Orang ke-2)
+    Route::get('/user/katalog', [UserController::class, 'katalog'])->name('user.katalog');
 });
 
 // 4. Route Khusus Admin Diler
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+    // ➕ MODUL ORANG KE-2: ROUTE CRUD ADMIN KATALOG & SPAREPART
+    Route::get('/admin/katalog', [AdminController::class, 'katalog'])->name('admin.katalog');
+    Route::post('/admin/katalog', [AdminController::class, 'storeKatalog'])->name('admin.katalog.store');
+    Route::put('/admin/katalog/{id}', [AdminController::class, 'updateKatalog'])->name('admin.katalog.update');
+    Route::delete('/admin/katalog/{id}', [AdminController::class, 'destroyKatalog'])->name('admin.katalog.destroy');
 });
 
 // 5. Route Bersama (User & Admin bisa Tambah & Hapus mobil)
