@@ -3,28 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
+    <title>Admin Dashboard</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         .bg-mitsubishi {
-    background-color: #111111 !important;
-    border-bottom: 3px solid #E60012;
-}
-.text-mitsubishi {
-    color: #E60012 !important;
-}
-.btn-mitsubishi {
-    background-color: #E60012;
-    color: #ffffff;
-    border: none;
-}
-.btn-mitsubishi:hover {
-    background-color: #b3000e;
-    color: #ffffff;
-}
+            background-color: #111111 !important;
+            border-bottom: 3px solid #E60012;
+        }
+        .text-mitsubishi {
+            color: #E60012 !important;
+        }
+        .btn-mitsubishi {
+            background-color: #E60012;
+            color: #ffffff;
+            border: none;
+        }
+        .btn-mitsubishi:hover {
+            background-color: #b3000e;
+            color: #ffffff;
+        }
     </style>
 </head>
 <body>
@@ -32,10 +32,14 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-mitsubishi py-3 mb-4">
     <div class="container">
         <a class="navbar-brand fw-bold tracking-wide" href="#">
-            <i class="fa-solid fa-gem text-mitsubishi me-2"></i>LOGO TAR GANTI AJ<span class="fw-normal text-white"></span>
+            <i class="fa-solid fa-gem text-mitsubishi me-2"></i>LOGO TAR GANTI AJ
         </a>
 
-        <div class="d-flex align-items-center gap-3">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <a href="{{ route('forum.index') }}" class="btn btn-outline-light btn-sm px-3 rounded-pill d-inline-flex align-items-center gap-2">
+                <i class="fa-solid fa-comments text-mitsubishi"></i> Monitoring Forum QnA
+            </a>
+
             <span class="badge border border-white px-3 py-2 rounded-pill">
                 <i class="fa-solid fa-user-shield me-1"></i> Admin Diler
             </span>
@@ -58,7 +62,7 @@
         </div>
     @endif
 
-    <div class="card card-custom p-4 mb-4">
+    <div class="card card-custom p-4 mb-4 border shadow-sm">
         <div class="row align-items-center">
             <div class="col-md-8">
                 <h4 class="fw-bold mb-1 text-dark">Monitoring Garasi Digital</h4>
@@ -74,7 +78,7 @@
         </div>
     </div>
 
-    <div class="card card-custom overflow-hidden">
+    <div class="card card-custom overflow-hidden border shadow-sm">
         <div class="card-header bg-dark text-white p-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
             <h6 class="m-0 fw-bold"><i class="fa-solid fa-car-tunnel text-mitsubishi me-2"></i>Data Kendaraan Terdaftar</h6>
             

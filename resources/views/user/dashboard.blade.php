@@ -34,6 +34,10 @@
         </a>
 
         <div class="d-flex align-items-center gap-3">
+            <a href="{{ route('forum.index') }}" class="btn btn-outline-light btn-sm px-3 rounded-pill">
+                <i class="fa-solid fa-comments me-1 text-mitsubishi"></i> Forum QnA
+            </a>
+
             <a href="{{ route('user.profile') }}" class="btn btn-outline-light btn-sm px-3 rounded-pill">
                 <i class="fa-solid fa-user-gear me-1"></i> Profil & Garasi Saya
             </a>
@@ -50,8 +54,12 @@
 
 <div class="container">
     <div class="p-4 bg-white rounded shadow-sm mb-4 border-start border-4 border-danger">
-        <h4>Selamat Datang, {{ Auth::user()->name }}!</h4>
-        <p class="text-muted m-0"><i class="fa-solid fa-circle-info me-1"></i> Cari sparepart dan estimasi layanan servis diler resmi Sun Star Prima Motors di sini.</p>
+        <h4 class="fw-bold">Selamat Datang, {{ Auth::user()->name }}!</h4>
+        <p class="text-muted mb-3"><i class="fa-solid fa-circle-info me-1"></i> Cari sparepart dan estimasi layanan servis diler resmi Sun Star Prima Motors di sini.</p>
+        
+        <a href="{{ route('forum.index') }}" class="btn btn-dark btn-sm">
+            <i class="fa-solid fa-comments text-mitsubishi me-1"></i> Kunjungi Forum QnA Komunitas
+        </a>
     </div>
 
     <div class="card p-5 text-center text-muted border-dashed shadow-sm">

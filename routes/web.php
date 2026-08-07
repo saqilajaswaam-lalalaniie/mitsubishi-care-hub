@@ -6,6 +6,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DiscussionController;
+use App\Http\Controllers\ReplyController;
 
 // 1. Halaman Utama (/) - Logika Auto-Redirect
 Route::get('/', function () {
@@ -48,4 +50,18 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::post('/vehicles', [VehicleController::class, 'store'])->name('vehicles.store');
     Route::delete('/vehicles/{vehicle}', [VehicleController::class, 'destroy'])->name('vehicles.destroy');
+});
+
+// 6. Route untuk Forum QnA
+Route::middleware(['auth'])->group(function () {
+    Route::get('/forum', [DiscussionController::class, 'index'])->name('forum.index');
+    Route::post('/forum', [DiscussionController::class, 'store'])->name('forum.store');
+    Route::put('/forum/{id}', [DiscussionController::class, 'update'])->name('forum.update');
+    Route::delete('/forum/{id}', [DiscussionController::class, 'destroy'])->name('forum.destroy');
+});
+
+// 7. Route untuk Balasan/Komentar Forum QnA
+Route::middleware(['auth'])->group(function () {
+    Route::post('/forum/{discussionId}/reply', [ReplyController::class, 'store'])->name('forum.reply');
+    Route::delete('/forum/reply/{id}', [ReplyController::class, 'destroy'])->name('forum.reply.destroy');
 });
