@@ -1,38 +1,9 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Beranda Katalog - Mitsubishi Care Hub</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+@extends('layouts.user')
 
-    <style>
-    .bg-mitsubishi {
-        background-color: #111111 !important;
-        border-bottom: 3px solid #E60012;
-    }
-    .text-mitsubishi {
-        color: #E60012 !important;
-    }
-    .btn-mitsubishi {
-        background-color: #E60012;
-        color: #ffffff;
-        border: none;
-    }
-    .btn-mitsubishi:hover {
-        background-color: #b3000e;
-        color: #ffffff;
-    }
-    </style>
-</head>
-<body class="bg-light">
+@section('title', 'Beranda Utama - Mitsubishi Care Hub')
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-mitsubishi py-3 mb-4">
-    <div class="container">
-        <a class="navbar-brand fw-bold tracking-wide" href="#">
-            <i class="fa-solid fa-car-side text-mitsubishi me-2"></i>LOGO TAR GANTI AJ<span class="fw-normal text-white"></span>
-        </a>
-
+@section('content')
+<div class="space-y-6">
         <div class="d-flex align-items-center gap-3">
             <a href="{{ route('forum.index') }}" class="btn btn-outline-light btn-sm px-3 rounded-pill">
                 <i class="fa-solid fa-comments me-1 text-mitsubishi"></i> Forum QnA
@@ -40,18 +11,32 @@
 
             <a href="{{ route('user.profile') }}" class="btn btn-outline-light btn-sm px-3 rounded-pill">
                 <i class="fa-solid fa-user-gear me-1"></i> Profil & Garasi Saya
-            </a>
+    <!-- pesan sukses-->
+    @if(session('success'))
+    <div class="bg-emerald-100 border border-emerald-300 text-emerald-800 px-4 py-3 rounded-lg text-sm flex items-center gap-2">
+        <i class="fa-solid fa-circle-check text-emerald-600"></i>
+        <span>{{ session('success') }}</span>
+    </div>
+    @endif
 
-            <form action="{{ route('logout') }}" method="POST" class="m-0">
-                @csrf
-                <button type="submit" class="btn btn-mitsubishi btn-sm px-3 rounded-pill">
-                    <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
-                </button>
-            </form>
+    
+    <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm border-l-4 border-l-red-600 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-xl font-bold text-gray-900 mb-1">
+                Selamat Datang, {{ Auth::user()->name }}! 👋
+            </h1>
+            <p class="text-xs text-gray-500 flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-info text-red-600"></i>
+                Cari sparepart dan estimasi layanan servis diler resmi Sun Star Prima Motor di sini.
+            </p>
+        </div>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('user.katalog') }}" class="bg-black hover:bg-gray-800 text-white font-bold px-4 py-2 rounded-lg text-xs transition flex items-center gap-2">
+                <i class="fa-solid fa-calculator"></i>
+                <span>Cek Kalkulator Servis</span>
+            </a>
         </div>
     </div>
-</nav>
-
 <div class="container">
     <div class="p-4 bg-white rounded shadow-sm mb-4 border-start border-4 border-danger">
         <h4 class="fw-bold">Selamat Datang, {{ Auth::user()->name }}!</h4>
@@ -60,14 +45,24 @@
         <a href="{{ route('forum.index') }}" class="btn btn-dark btn-sm">
             <i class="fa-solid fa-comments text-mitsubishi me-1"></i> Kunjungi Forum QnA Komunitas
         </a>
+    <!--  Banner Garasi -->
+    <div class="bg-white rounded-lg border border-gray-200 border-dashed p-10 text-center shadow-sm space-y-3">
+        <div class="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto">
+            <i class="fa-solid fa-boxes-stacked text-2xl"></i>
+        </div>
+        <div>
+            <h3 class="font-bold text-gray-800 text-base">Katalog Pilihan Kendaraan Anda</h3>
+            <p class="text-xs text-gray-500 max-w-md mx-auto mt-1 leading-relaxed">
+                Katalog sparepart dan rekomendasi servis akan disesuaikan secara otomatis berdasarkan tipe kendaraan yang terdaftar di garasi digital Anda.
+            </p>
+        </div>
+        <div class="pt-2">
+            <a href="{{ route('user.profile') }}" class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold px-4 py-2 rounded-lg text-xs transition border border-gray-300">
+                <i class="fa-solid fa-car"></i>
+                <span>Lihat Garasi Saya</span>
+            </a>
+        </div>
     </div>
 
-    <div class="card p-5 text-center text-muted border-dashed shadow-sm">
-        <i class="fa-solid fa-boxes-stacked fa-3x mb-3 text-secondary"></i>
-        <h5>[ Belum kepikiran lagi, hehe. Lanjutin yh ]</h5>
-        <p class="mb-0">Katalog akan ditampilkan di sini sesuai kendaraan yang terdaftar di garasi Anda.</p>
-    </div>
 </div>
-
-</body>
-</html>
+@endsection
