@@ -4,7 +4,13 @@
 
 @section('content')
 <div class="space-y-6">
+        <div class="d-flex align-items-center gap-3">
+            <a href="{{ route('forum.index') }}" class="btn btn-outline-light btn-sm px-3 rounded-pill">
+                <i class="fa-solid fa-comments me-1 text-mitsubishi"></i> Forum QnA
+            </a>
 
+            <a href="{{ route('user.profile') }}" class="btn btn-outline-light btn-sm px-3 rounded-pill">
+                <i class="fa-solid fa-user-gear me-1"></i> Profil & Garasi Saya
     <!-- pesan sukses-->
     @if(session('success'))
     <div class="bg-emerald-100 border border-emerald-300 text-emerald-800 px-4 py-3 rounded-lg text-sm flex items-center gap-2">
@@ -31,7 +37,14 @@
             </a>
         </div>
     </div>
-
+<div class="container">
+    <div class="p-4 bg-white rounded shadow-sm mb-4 border-start border-4 border-danger">
+        <h4 class="fw-bold">Selamat Datang, {{ Auth::user()->name }}!</h4>
+        <p class="text-muted mb-3"><i class="fa-solid fa-circle-info me-1"></i> Cari sparepart dan estimasi layanan servis diler resmi Sun Star Prima Motors di sini.</p>
+        
+        <a href="{{ route('forum.index') }}" class="btn btn-dark btn-sm">
+            <i class="fa-solid fa-comments text-mitsubishi me-1"></i> Kunjungi Forum QnA Komunitas
+        </a>
     <!--  Banner Garasi -->
     <div class="bg-white rounded-lg border border-gray-200 border-dashed p-10 text-center shadow-sm space-y-3">
         <div class="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto">

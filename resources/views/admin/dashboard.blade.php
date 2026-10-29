@@ -1,7 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
 @extends('layouts.admin')
 
 @section('title', 'Monitoring Garasi Digital - Admin Panel')
 
+    <style>
+        .bg-mitsubishi {
+            background-color: #111111 !important;
+            border-bottom: 3px solid #E60012;
+        }
+        .text-mitsubishi {
+            color: #E60012 !important;
+        }
+        .btn-mitsubishi {
+            background-color: #E60012;
+            color: #ffffff;
+            border: none;
+        }
+        .btn-mitsubishi:hover {
+            background-color: #b3000e;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-mitsubishi py-3 mb-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold tracking-wide" href="#">
+            <i class="fa-solid fa-gem text-mitsubishi me-2"></i>LOGO TAR GANTI AJ
+        </a>
+
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <a href="{{ route('forum.index') }}" class="btn btn-outline-light btn-sm px-3 rounded-pill d-inline-flex align-items-center gap-2">
+                <i class="fa-solid fa-comments text-mitsubishi"></i> Monitoring Forum QnA
+            </a>
+
+            <span class="badge border border-white px-3 py-2 rounded-pill">
+                <i class="fa-solid fa-user-shield me-1"></i> Admin Diler
+            </span>
+
+            <form action="{{ route('logout') }}" method="POST" class="m-0">
+                @csrf
+                <button type="submit" class="btn btn-mitsubishi btn-sm px-3 rounded-pill">
+                    <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container mb-5">
 @section('content')
 <div class="space-y-6">
 
@@ -13,6 +66,11 @@
     </div>
     @endif
 
+    <div class="card card-custom p-4 mb-4 border shadow-sm">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h4 class="fw-bold mb-1 text-dark">Monitoring Garasi Digital</h4>
+                <p class="text-secondary small mb-0">Daftar semua unit kendaraan pelanggan yang terdaftar di sistem Mitsubishi Sun Star Prima Motor.</p>
     <!-- Monitoring Garasi Digital -->
     <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -151,6 +209,76 @@
             </div>
         </div>
 
+    <div class="card card-custom overflow-hidden border shadow-sm">
+        <div class="card-header bg-dark text-white p-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <h6 class="m-0 fw-bold"><i class="fa-solid fa-car-tunnel text-mitsubishi me-2"></i>Data Kendaraan Terdaftar</h6>
+            
+            <div class="input-group input-group-sm" style="max-width: 280px;">
+                <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                <input type="text" id="searchInput" onkeyup="searchTable()" class="form-control border-start-0" placeholder="Cari Nopol / Pemilik / Tipe...">
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="vehicleTable">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Pemilik</th>
+                            <th>Tipe Mobil</th>
+                            <th>Plat Nomor</th>
+                            <th>Warna & Tahun</th>
+                            <th class="text-center pe-4">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($vehicles as $item)
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="fw-bold text-dark">{{ $item->user->name ?? 'User Terhapus' }}</div>
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-danger bg-opacity-10 text-mitsubishi fw-bold px-3 py-2 rounded-2">
+                                        {{ $item->tipe_mobil }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <code class="fw-bold text-dark fs-6 bg-light px-2 py-1 rounded border">{{ $item->plat_nomor }}</code>
+                                </td>
+
+                                <td>
+                                    <span class="text-dark fw-semibold">{{ $item->warna }}</span>
+                                    <span class="text-muted small">({{ $item->tahun }})</span>
+                                </td>
+
+                                <td class="text-center pe-4">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <button class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalDetail{{ $item->id }}" title="Lihat Detail Lengkap">
+                                            <i class="fa-solid fa-eye me-1"></i>
+                                        </button>
+
+                                        <form action="{{ route('vehicles.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus data mobil ini dari garasi digital?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger" title="Hapus Data">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center py-5 text-muted">
+                                    <i class="fa-solid fa-folder-open fa-3x mb-3 text-secondary"></i>
+                                    <p class="mb-0">Belum ada kendaraan yang dimasukkan oleh pelanggan.</p>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         <div class="bg-gray-50 px-4 py-3 flex justify-end">
             <button onclick="closeDetailModal({{ $item->id }})" class="bg-gray-800 hover:bg-black text-white font-bold px-4 py-1.5 rounded text-xs transition">
                 Tutup
