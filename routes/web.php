@@ -8,6 +8,7 @@ use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\ReplyController;
+use App\Http\Controllers\AdminForumController;
 
 // 1. Halaman Utama (/) - Logika Auto-Redirect
 Route::get('/', function () {
@@ -71,7 +72,23 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/forum/{id}', [DiscussionController::class, 'update'])->name('forum.update');
     Route::delete('/forum/{id}', [DiscussionController::class, 'destroy'])->name('forum.destroy');
 
-    // Balasan / Komentar Forum
+    // Balasan / Komentar Forum (Mendukung kedua penamaan route agar tidak broken link)
     Route::post('/forum/{discussionId}/reply', [ReplyController::class, 'store'])->name('forum.reply');
+    Route::post('/forum/{discussion}/reply', [ReplyController::class, 'store'])->name('reply.store');
+    
     Route::delete('/forum/reply/{id}', [ReplyController::class, 'destroy'])->name('forum.reply.destroy');
+    Route::delete('/forum/reply/{id}', [ReplyController::class, 'destroy'])->name('reply.destroy');
+});
+
+// 7. Route untuk folder discussions
+Route::middleware(['auth'])->group(function () {
+    Route::get('/discussions', function () {
+        return view('discussions.index');
+    })->name('discussions.index');
+});
+
+// 8. Route Khusus Admin Moderasi Forum
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/forum', [AdminForumController::class, 'index'])->name('forum.index');
+    Route::delete('/forum/{id}', [AdminForumController::class, 'destroy'])->name('forum.destroy');
 });

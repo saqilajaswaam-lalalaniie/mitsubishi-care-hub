@@ -3,38 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Reply;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Reply; // Pastikan Model Reply sudah ada
 
 class ReplyController extends Controller
 {
-    // Menyimpan balasan baru dari user atau admin
     public function store(Request $request, $discussionId)
     {
+        // Validasi input balasan dari admin
         $request->validate([
-            'content' => 'required|string',
+            'reply' => 'required|string|max:1000',
         ]);
 
+        // Simpan balasan ke dalam database
         Reply::create([
             'discussion_id' => $discussionId,
-            'user_id' => Auth::id(),
-            'content' => $request->content,
+            'user_id' => auth()->id(), // Menyimpan ID admin yang sedang login
+            'content' => $request->reply,
         ]);
 
-        return redirect()->back()->with('success', 'Balasan berhasil dikirim!');
-    }
-
-    // Menghapus balasan (hanya pembuat atau admin)
-    public function destroy($id)
-    {
-        $reply = Reply::findOrFail($id);
-
-        if (Auth::id() !== $reply->user_id && Auth::user()->role !== 'admin') {
-            abort(403);
-        }
-
-        $reply->delete();
-
-        return redirect()->back()->with('success', 'Balasan berhasil dihapus.');
+        // Kembalikan ke halaman sebelumnya dengan pesan sukses
+        return redirect()->back()->with('success', 'Solusi berhasil dikirim ke pengguna!');
     }
 }
