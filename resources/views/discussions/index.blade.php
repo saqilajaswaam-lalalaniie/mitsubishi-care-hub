@@ -5,16 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum Tanya Jawab Komunitas - Mitsubishi Care</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-100">
 
     <nav class="bg-black text-white p-4 flex justify-between items-center border-b-4 border-red-600">
         <div class="font-bold text-lg text-red-600 flex items-center gap-2">
-            🚗 LOGO TAR GANTI AJ
+            🚗 MITSUBISHI CARE
         </div>
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4 text-sm">
             <a href="{{ route('forum.index') }}" class="hover:text-red-500 font-semibold">Forum QnA</a>
-            @if(Auth::user()->role === 'admin')
+            @if(Auth::check() && Auth::user()->role === 'admin')
                 <a href="{{ route('admin.dashboard') }}" class="hover:text-red-500">Dashboard Admin</a>
             @else
                 <a href="{{ route('user.dashboard') }}" class="hover:text-red-500">Garasi Saya</a>
@@ -25,11 +26,11 @@
     <div class="container mx-auto p-6 max-w-4xl">
         
         @if(session('success'))
-    <div class="bg-[#d4edda] border border-[#c3e6cb] text-[#155724] px-4 py-3 rounded-lg mb-6 shadow-sm flex items-center gap-2 text-sm font-medium">
-        <i class="fa-solid fa-circle-check text-green-600"></i>
-        <span>{{ session('success') }}</span>
-    </div>
-@endif
+        <div class="bg-[#d4edda] border border-[#c3e6cb] text-[#155724] px-4 py-3 rounded-lg mb-6 shadow-sm flex items-center gap-2 text-sm font-medium">
+            <i class="fa-solid fa-circle-check text-green-600"></i>
+            <span>{{ session('success') }}</span>
+        </div>
+        @endif
 
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
             <div>
@@ -54,7 +55,7 @@
                 <option value="Lainnya" {{ request('category') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
             </select>
 
-            <button type="submit" class="bg-black text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-800 transition">Filter</button>
+            <button type="submit" class="bg-black text-white px-6 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition">Cari</button>
         </form>
 
         <div class="space-y-6">
@@ -66,7 +67,7 @@
                             <h2 class="text-lg font-bold mt-2 text-gray-900">{{ $item->title }}</h2>
                         </div>
                         <span class="text-xs px-2.5 py-1 rounded-full font-semibold {{ $item->status == 'Terjawab' || $item->status == 'Solusi Resmi' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
-                            {{ $item->status }}
+                            {{ $item->status ?? 'Menunggu' }}
                         </span>
                     </div>
                     <p class="text-gray-600 mt-2 text-sm whitespace-pre-line">{{ $item->content }}</p>
@@ -75,7 +76,7 @@
                         <span>Ditulis oleh: <strong class="text-gray-700">{{ $item->user->name ?? 'Anonim' }}</strong> pada {{ $item->created_at->format('d M Y, H:i') }}</span>
                         
                         <div class="flex items-center gap-3">
-                            @if(Auth::user()->role === 'admin')
+                            @if(Auth::check() && Auth::user()->role === 'admin')
                                 <form action="{{ route('forum.update', $item->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('PUT')
@@ -84,7 +85,10 @@
                                 </form>
                             @endif
 
-                            @if(Auth::id() === $item->user_id || Auth::user()->role === 'admin')
+                            {{-- Tombol Edit untuk Pemilik Pertanyaan atau Admin --}}
+                            @if(Auth::check() && (Auth::id() === $item->user_id || Auth::user()->role === 'admin'))
+                                <button type="button" onclick="openEditModal({{ $item->id }})" class="text-blue-600 hover:underline font-semibold">Edit</button>
+
                                 <form action="{{ route('forum.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus diskusi ini?')">
                                     @csrf
                                     @method('DELETE')
@@ -98,59 +102,62 @@
                         <h3 class="text-xs font-bold uppercase text-gray-500 mb-3">Balasan / Solusi ({{ $item->replies->count() }})</h3>
                         
                         <div class="space-y-3 mb-4">
-    @foreach($item->replies as $reply)
-        @if(optional($reply->user)->role === 'admin')
-            <div class="bg-red-50 border-l-4 border-red-600 p-3.5 rounded-r-lg text-sm relative shadow-sm">
-                <div class="flex justify-between items-start mb-1">
-                    <span class="font-bold text-red-700 text-xs flex items-center gap-1.5">
-                        🛡️ {{ $reply->user->name ?? 'Admin' }} 
-                        <span class="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider">Respon Resmi Diler</span>
-                    </span>
-                </div>
-                
-                <p class="text-gray-800 text-xs whitespace-pre-line font-medium mt-1 mb-2">{{ $reply->content }}</p>
+                            @forelse($item->replies as $reply)
+                                @if(optional($reply->user)->role === 'admin')
+                                    <div class="bg-red-50 border-l-4 border-red-600 p-3.5 rounded-r-lg text-sm relative shadow-sm">
+                                        <div class="flex justify-between items-start mb-1">
+                                            <span class="font-bold text-red-700 text-xs flex items-center gap-1.5">
+                                                🛡️ {{ $reply->user->name ?? 'Admin' }} 
+                                                <span class="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider">Respon Resmi Diler</span>
+                                            </span>
+                                        </div>
+                                        
+                                        <p class="text-gray-800 text-xs whitespace-pre-line font-medium mt-1 mb-2">{{ $reply->content }}</p>
 
-                <div class="flex justify-between items-center text-[10px] text-gray-500 border-t border-red-200 pt-2">
-                    <span>{{ $reply->created_at->format('d M Y, H:i') }}</span>
+                                        <div class="flex justify-between items-center text-[10px] text-gray-500 border-t border-red-200 pt-2">
+                                            <span>{{ $reply->created_at->format('d M Y, H:i') }}</span>
 
-                    @if(Auth::id() === $reply->user_id || Auth::user()->role === 'admin')
-                        <form action="{{ route('forum.reply.destroy', $reply->id) }}" method="POST" onsubmit="return confirm('Hapus balasan resmi ini?')">
+                                            @if(Auth::check() && (Auth::id() === $reply->user_id || Auth::user()->role === 'admin'))
+                                                <form action="{{ route('reply.destroy', $reply->id) }}" method="POST" onsubmit="return confirm('Hapus balasan resmi ini?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-600 hover:underline font-semibold">✕ Hapus Balasan</button>
+                                                </form>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="bg-white border border-gray-200 p-3 rounded-lg text-sm relative">
+                                        <div class="flex justify-between items-start mb-1">
+                                            <span class="font-bold text-gray-800 text-xs flex items-center gap-1">
+                                                👤 {{ $reply->user->name ?? 'Anonim' }}
+                                            </span>
+                                        </div>
+
+                                        <p class="text-gray-600 text-xs whitespace-pre-line mt-1 mb-2">{{ $reply->content }}</p>
+
+                                        <div class="flex justify-between items-center text-[10px] text-gray-400 border-t border-gray-100 pt-2">
+                                            <span>{{ $reply->created_at->format('d M Y, H:i') }}</span>
+
+                                            @if(Auth::check() && (Auth::id() === $reply->user_id || Auth::user()->role === 'admin'))
+                                                <form action="{{ route('reply.destroy', $reply->id) }}" method="POST" onsubmit="return confirm('Hapus balasan ini?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-500 hover:underline font-semibold">✕ Hapus</button>
+                                                </form>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endif
+                            @empty
+                                <p class="text-xs text-gray-400 italic">Belum ada balasan untuk diskusi ini.</p>
+                            @endforelse
+                        </div>
+
+                        <!-- Form Kirim Balasan -->
+                        <form action="{{ route('reply.store', $item->id) }}" method="POST" class="flex gap-2">
                             @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:underline font-semibold">✕ Hapus Balasan</button>
-                        </form>
-                    @endif
-                </div>
-            </div>
-        @else
-            <div class="bg-white border border-gray-200 p-3 rounded-lg text-sm relative">
-                <div class="flex justify-between items-start mb-1">
-                    <span class="font-bold text-gray-800 text-xs flex items-center gap-1">
-                        👤 {{ $reply->user->name ?? 'Anonim' }}
-                    </span>
-                </div>
-
-                <p class="text-gray-600 text-xs whitespace-pre-line mt-1 mb-2">{{ $reply->content }}</p>
-
-                <div class="flex justify-between items-center text-[10px] text-gray-400 border-t border-gray-100 pt-2">
-                    <span>{{ $reply->created_at->format('d M Y, H:i') }}</span>
-
-                    @if(Auth::id() === $reply->user_id || Auth::user()->role === 'admin')
-                        <form action="{{ route('forum.reply.destroy', $reply->id) }}" method="POST" onsubmit="return confirm('Hapus balasan ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-500 hover:underline font-semibold">✕ Hapus</button>
-                        </form>
-                    @endif
-                </div>
-            </div>
-        @endif
-    @endforeach
-</div>
-
-                        <form action="{{ route('forum.reply', $item->id) }}" method="POST" class="flex gap-2">
-                            @csrf
-                            <input type="text" name="content" placeholder="Tulis balasan atau solusi..." class="flex-1 border rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 bg-white" required>
+                            <input type="text" name="reply" placeholder="Tulis balasan atau solusi..." class="flex-1 border rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 bg-white" required>
                             <button type="submit" class="bg-black text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-gray-800 transition">Kirim</button>
                         </form>
                     </div>
@@ -168,6 +175,7 @@
         </div>
     </div>
 
+    <!-- MODAL CREATE -->
     <div id="modalCreate" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-lg p-6 w-full max-w-lg shadow-xl">
             <h2 class="text-xl font-bold mb-4 text-gray-800">Buat Pertanyaan Baru</h2>
@@ -198,6 +206,50 @@
             </form>
         </div>
     </div>
+
+    <!-- MODAL EDIT UNTUK SETIAP DISKUSI -->
+    @foreach($discussions as $item)
+    <div id="editModal{{ $item->id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-lg shadow-xl">
+            <h2 class="text-xl font-bold mb-4 text-gray-800">Edit Pertanyaan</h2>
+            <form action="{{ route('forum.update', $item->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Kategori Kendala</label>
+                    <select name="category" class="w-full border rounded-lg p-2.5 mt-1 text-sm focus:outline-none focus:ring-2 focus:ring-red-500" required>
+                        <option value="Mesin" {{ $item->category == 'Mesin' ? 'selected' : '' }}>Mesin</option>
+                        <option value="Kelistrikan" {{ $item->category == 'Kelistrikan' ? 'selected' : '' }}>Kelistrikan</option>
+                        <option value="AC" {{ $item->category == 'AC' ? 'selected' : '' }}>AC</option>
+                        <option value="Kaki-kaki" {{ $item->category == 'Kaki-kaki' ? 'selected' : '' }}>Kaki-kaki / Suspensi</option>
+                        <option value="Lainnya" {{ $item->category == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Judul Kendala / Pertanyaan</label>
+                    <input type="text" name="title" value="{{ $item->title }}" class="w-full border rounded-lg p-2.5 mt-1 text-sm focus:outline-none focus:ring-2 focus:ring-red-500" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Detail Pertanyaan</label>
+                    <textarea name="content" rows="4" class="w-full border rounded-lg p-2.5 mt-1 text-sm focus:outline-none focus:ring-2 focus:ring-red-500" required>{{ $item->content }}</textarea>
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="closeEditModal({{ $item->id }})" class="bg-gray-300 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-400">Batal</button>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    @endforeach
+
+    <script>
+        function openEditModal(id) {
+            document.getElementById('editModal' + id).classList.remove('hidden');
+        }
+        function closeEditModal(id) {
+            document.getElementById('editModal' + id).classList.add('hidden');
+        }
+    </script>
 
 </body>
 </html>

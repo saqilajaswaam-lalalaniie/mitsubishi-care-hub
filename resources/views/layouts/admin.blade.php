@@ -9,10 +9,10 @@
 </head>
 <body class="bg-gray-100 font-sans text-gray-800 antialiased min-h-screen flex flex-col relative">
 
-  
+  <!-- Sidebar Overlay -->
   <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300"></div>
 
- 
+  <!-- Sidebar -->
   <aside id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-black text-white z-50 transform -translate-x-full transition-transform duration-300 ease-in-out border-r-2 border-red-600 shadow-2xl flex flex-col justify-between">
     <div>
       <!-- Header Sidebar -->
@@ -30,7 +30,7 @@
       <nav class="p-4 space-y-2">
         <div class="text-[10px] uppercase tracking-wider text-gray-500 font-bold px-3 mb-2">Navigasi Admin</div>
         
-        <!-- Link Dashboard -->
+        <!-- Link Dashboard / Garasi Digital -->
         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition {{ request()->routeIs('admin.dashboard') ? 'bg-red-600 text-white' : 'text-gray-300 hover:bg-gray-900 hover:text-white' }}">
           <i class="fa-solid fa-gauge w-5 text-center"></i>
           <span>Garasi Digital</span>
@@ -40,6 +40,12 @@
         <a href="{{ route('admin.katalog') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition {{ request()->routeIs('admin.katalog') ? 'bg-red-600 text-white' : 'text-gray-300 hover:bg-gray-900 hover:text-white' }}">
           <i class="fa-solid fa-boxes-packing w-5 text-center"></i>
           <span>Kelola Katalog & Sparepart</span>
+        </a>
+
+        <!-- ➕ Link Moderasi Forum QnA (Baru Ditambahkan) -->
+        <a href="{{ route('admin.forum.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition {{ request()->routeIs('admin.forum.*') ? 'bg-red-600 text-white' : 'text-gray-300 hover:bg-gray-900 hover:text-white' }}">
+          <i class="fa-solid fa-comments w-5 text-center"></i>
+          <span>Moderasi Forum QnA</span>
         </a>
       </nav>
     </div>
@@ -58,7 +64,7 @@
     </div>
   </aside>
 
-  <!-- Navbar Atas  -->
+  <!-- Navbar Atas -->
   <nav class="bg-black text-white border-b-2 border-red-600 px-6 py-3 flex justify-between items-center sticky top-0 z-30 shadow-md">
     <div class="flex items-center gap-4">
       <button onclick="toggleSidebar()" class="bg-gray-900 hover:bg-red-600 text-white p-2 rounded-lg transition border border-gray-800 focus:outline-none">
@@ -82,12 +88,12 @@
     </div>
   </nav>
 
- 
+  <!-- Main Content -->
   <main class="max-w-6xl w-full mx-auto my-6 p-4 flex-1">
     @yield('content')
   </main>
 
- 
+  <!-- Script Sidebar Toggle -->
   <script>
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');

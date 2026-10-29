@@ -4,14 +4,19 @@
 
 @section('content')
 <div class="space-y-6">
-        <div class="d-flex align-items-center gap-3">
-            <a href="{{ route('forum.index') }}" class="btn btn-outline-light btn-sm px-3 rounded-pill">
-                <i class="fa-solid fa-comments me-1 text-mitsubishi"></i> Forum QnA
-            </a>
 
-            <a href="{{ route('user.profile') }}" class="btn btn-outline-light btn-sm px-3 rounded-pill">
-                <i class="fa-solid fa-user-gear me-1"></i> Profil & Garasi Saya
-    <!-- pesan sukses-->
+    <!-- Navigasi Cepat / Tombol Menu Atas -->
+    <div class="flex flex-wrap items-center gap-3">
+        <a href="{{ route('forum.index') }}" class="bg-black text-white hover:bg-gray-800 text-xs font-semibold px-4 py-2 rounded-full transition flex items-center gap-2 border border-gray-800">
+            <i class="fa-solid fa-comments text-red-500"></i> Forum QnA
+        </a>
+
+        <a href="{{ route('user.profile') }}" class="bg-white text-gray-700 hover:bg-gray-100 text-xs font-semibold px-4 py-2 rounded-full transition flex items-center gap-2 border border-gray-300">
+            <i class="fa-solid fa-user-gear text-red-600"></i> Profil & Garasi Saya
+        </a>
+    </div>
+
+    <!-- Pesan Sukses (Alert) -->
     @if(session('success'))
     <div class="bg-emerald-100 border border-emerald-300 text-emerald-800 px-4 py-3 rounded-lg text-sm flex items-center gap-2">
         <i class="fa-solid fa-circle-check text-emerald-600"></i>
@@ -19,7 +24,7 @@
     </div>
     @endif
 
-    
+    <!-- Banner Sambutan Utama -->
     <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm border-l-4 border-l-red-600 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
             <h1 class="text-xl font-bold text-gray-900 mb-1">
@@ -37,15 +42,8 @@
             </a>
         </div>
     </div>
-<div class="container">
-    <div class="p-4 bg-white rounded shadow-sm mb-4 border-start border-4 border-danger">
-        <h4 class="fw-bold">Selamat Datang, {{ Auth::user()->name }}!</h4>
-        <p class="text-muted mb-3"><i class="fa-solid fa-circle-info me-1"></i> Cari sparepart dan estimasi layanan servis diler resmi Sun Star Prima Motors di sini.</p>
-        
-        <a href="{{ route('forum.index') }}" class="btn btn-dark btn-sm">
-            <i class="fa-solid fa-comments text-mitsubishi me-1"></i> Kunjungi Forum QnA Komunitas
-        </a>
-    <!--  Banner Garasi -->
+
+    <!-- Banner Garasi & Katalog -->
     <div class="bg-white rounded-lg border border-gray-200 border-dashed p-10 text-center shadow-sm space-y-3">
         <div class="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto">
             <i class="fa-solid fa-boxes-stacked text-2xl"></i>

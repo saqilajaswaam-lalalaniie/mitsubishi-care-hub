@@ -8,13 +8,14 @@ use Illuminate\Support\Facades\Auth;
 
 class DiscussionController extends Controller
 {
-    // Read: Menampilkan daftar forum QnA
+    // Read: Menampilkan daftar forum QnA beserta balasan dari admin
     public function index(Request $request)
     {
         $search = $request->input('search');
         $category = $request->input('category');
 
-        $discussions = Discussion::with('user')
+        // TAMBAHKAN 'replies.user' DI SINI 
+        $discussions = Discussion::with(['user', 'replies.user'])
             ->when($search, function($query, $search) {
                 return $query->where('title', 'like', "%{$search}%")
                              ->orWhere('content', 'like', "%{$search}%");
