@@ -5,7 +5,7 @@
 @section('content')
 <div class="space-y-6">
 
-  <!-- Notifikasi Pesan Berhasil -->
+  
   @if(session('success'))
   <div class="bg-green-100 border border-green-300 text-green-800 p-3.5 rounded-lg text-sm flex items-center gap-2">
     <i class="fa-solid fa-circle-check text-green-600"></i>
@@ -21,7 +21,6 @@
 
     <form action="{{ route('admin.katalog.store') }}" method="POST" class="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
       @csrf
-
       <div>
         <label class="block text-xs font-bold text-gray-700 mb-1">Nama Layanan / Sparepart</label>
         <input type="text" name="name" required placeholder="misal: Servis Ringan / Rutin" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-red-600">

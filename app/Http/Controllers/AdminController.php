@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
 use App\Models\Catalog;
+use App\Models\Booking; // ➕ Panggil Model Booking
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -78,5 +79,31 @@ class AdminController extends Controller
         $catalog->delete();
 
         return back()->with('success', 'Item katalog berhasil dihapus!');
+    }
+
+    // ==========================================
+    // ➕ MODUL KELOLA BOOKING SERVIS PELANGGAN
+    // ==========================================
+
+    // 1. Menampilkan Daftar Booking Masuk dari Pelanggan
+    public function indexBookings()
+    {
+        $bookings = Booking::with(['user', 'vehicle'])->latest()->get();
+        return view('admin.bookings', compact('bookings'));
+    }
+
+    // 2. Mengubah Status Booking (Pending, Disetujui, Selesai, Ditolak)
+    public function updateBookingStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:Pending,Disetujui,Selesai,Ditolak',
+        ]);
+
+        $booking = Booking::findOrFail($id);
+        $booking->update([
+            'status' => $request->status,
+        ]);
+
+        return back()->with('success', 'Status pengajuan booking berhasil diperbarui!');
     }
 }

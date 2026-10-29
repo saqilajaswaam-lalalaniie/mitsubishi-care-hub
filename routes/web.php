@@ -58,3 +58,24 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/vehicles', [VehicleController::class, 'store'])->name('vehicles.store');
     Route::delete('/vehicles/{vehicle}', [VehicleController::class, 'destroy'])->name('vehicles.destroy');
 });
+
+// Route User
+Route::middleware(['auth', 'role:user'])->group(function () {
+    Route::get('/user/dashboard', [UserController::class, 'index'])->name('user.dashboard');
+    Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
+    Route::put('/user/profile', [UserController::class, 'updateProfile'])->name('user.profile.update');
+    Route::get('/user/katalog', [UserController::class, 'katalog'])->name('user.katalog');
+    Route::post('/user/booking', [UserController::class, 'storeBooking'])->name('user.booking.store');
+    Route::get('/user/riwayat-booking', [UserController::class, 'riwayatBooking'])->name('user.booking.history');
+});
+
+// Route Admin
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/admin/katalog', [AdminController::class, 'katalog'])->name('admin.katalog');
+    Route::post('/admin/katalog', [AdminController::class, 'storeKatalog'])->name('admin.katalog.store');
+    Route::put('/admin/katalog/{id}', [AdminController::class, 'updateKatalog'])->name('admin.katalog.update');
+    Route::delete('/admin/katalog/{id}', [AdminController::class, 'destroyKatalog'])->name('admin.katalog.destroy');
+    Route::get('/admin/bookings', [AdminController::class, 'indexBookings'])->name('admin.bookings');
+    Route::put('/admin/bookings/{id}', [AdminController::class, 'updateBookingStatus'])->name('admin.bookings.update');
+});

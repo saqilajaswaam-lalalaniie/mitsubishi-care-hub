@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Catalog; // ➕ Panggil Model Catalog
+use App\Models\Catalog; 
+use App\Models\Booking; // ➕ Import Model Booking
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -51,5 +52,39 @@ class UserController extends Controller
 
         // ➕ Kirim $catalogs dan $vehicles ke view
         return view('user.katalog', compact('catalogs', 'vehicles'));
+    }
+
+    // ➕ Method 1: Menyimpan data booking dari kalkulator ke database
+    public function storeBooking(Request $request)
+    {
+        $request->validate([
+            'vehicle_id'   => 'required|exists:vehicles,id',
+            'booking_date' => 'required|date',
+            'total_price'  => 'required|numeric',
+            'items'        => 'required|string',
+        ]);
+
+        Booking::create([
+            'user_id'      => Auth::id(),
+            'vehicle_id'   => $request->vehicle_id,
+            'items'        => $request->items,
+            'total_price'  => $request->total_price,
+            'booking_date' => $request->booking_date,
+            'notes'        => $request->notes,
+            'status'       => 'Pending',
+        ]);
+
+        return redirect()->route('user.booking.history')->with('success', 'Jadwal servis berhasil disimpan! Silakan cek status pengajuan Anda di bawah.');
+    }
+
+    // ➕ Method 2: Menampilkan halaman riwayat booking milik user
+    public function riwayatBooking()
+    {
+        $bookings = Booking::where('user_id', Auth::id())
+            ->with('vehicle')
+            ->latest()
+            ->get();
+
+        return view('user.riwayat_booking', compact('bookings'));
     }
 }

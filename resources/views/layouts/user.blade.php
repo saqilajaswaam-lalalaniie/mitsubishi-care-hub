@@ -15,11 +15,11 @@
     <!-- Sidebar Collapsible User -->
     <aside id="user-sidebar" class="fixed top-0 left-0 h-full w-64 bg-black text-white z-50 transform -translate-x-full transition-transform duration-300 ease-in-out border-r-2 border-red-600 shadow-2xl flex flex-col justify-between">
         <div>
-            <!-- Header Sidebar -->
+            <!-- Header Sidebar dengan Logo Gambar -->
             <div class="p-5 border-b border-gray-800 flex justify-between items-center">
                 <div class="flex items-center gap-2 text-red-600 font-bold text-base">
-                    <i class="fa-solid fa-car text-xl"></i>
-                    <span class="text-white">LOGO TAR GANTI AJ</span>
+                    <img src="{{ asset('images/lg.png') }}" alt="Logo" class="h-6 w-auto object-contain">
+                    <span class="text-white text-sm">Sun Star Prima Motor</span>
                 </div>
                 <button onclick="toggleUserSidebar()" class="text-gray-400 hover:text-white transition">
                     <i class="fa-solid fa-xmark text-xl"></i>
@@ -34,6 +34,12 @@
                 <a href="{{ route('user.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition {{ request()->routeIs('user.dashboard') ? 'bg-red-600 text-white' : 'text-gray-300 hover:bg-gray-900 hover:text-white' }}">
                     <i class="fa-solid fa-store w-5 text-center text-base"></i>
                     <span>Beranda Utama</span>
+                </a>
+
+                <!-- Link Riwayat Booking Servis -->
+                <a href="{{ route('user.booking.history') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition {{ request()->routeIs('user.booking.history') ? 'bg-red-600 text-white' : 'text-gray-300 hover:bg-gray-900 hover:text-white' }}">
+                    <i class="fa-solid fa-clock-rotate-left w-5 text-center text-base"></i>
+                    <span>Riwayat Booking Servis</span>
                 </a>
 
                 <!-- Link Profil & Garasi Digital -->
@@ -64,24 +70,24 @@
         </div>
     </aside>
 
-    <!-- Top Navbar Bar -->
+    <!-- Top Navbar Bar dengan Logo Gambar -->
     <nav class="bg-black text-white border-b-2 border-red-600 px-6 py-3 flex justify-between items-center sticky top-0 z-30 shadow-md">
         <div class="flex items-center gap-4">
-            
             <button onclick="toggleUserSidebar()" class="bg-gray-900 hover:bg-red-600 text-white p-2 rounded-lg transition border border-gray-800 focus:outline-none">
                 <i class="fa-solid fa-bars text-lg"></i>
             </button>
 
-            <div class="flex items-center gap-2 font-bold text-lg text-red-600">
-                <i class="fa-solid fa-car"></i>
-                <span class="text-white tracking-wide">LOGO TAR GANTI AJ</span>
+            <!-- Brand / Logo Berupa Gambar -->
+            <div class="flex items-center gap-3">
+                <img src="{{ asset('images/lg.png') }}" alt="Logo Mitsubishi" class="h-8 w-auto object-contain">
+                <span class="text-white font-bold tracking-wide text-base sm:text-lg">Sun Star Prima Motor</span>
             </div>
         </div>
 
         <div class="flex items-center gap-3">
             <form action="{{ route('logout') }}" method="POST" class="m-0">
                 @csrf
-                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded-full text-xs font-semibold transition flex items-center gap-1 border-0">
+                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded-full text-xs font-semibold transition flex items-center gap-1 border-0 shadow-sm">
                     <i class="fa-solid fa-right-from-bracket"></i> Logout
                 </button>
             </form>
@@ -93,7 +99,7 @@
         @yield('content')
     </main>
 
-    
+    <!-- Script JavaScript untuk Toggle Sidebar User -->
     <script>
         function toggleUserSidebar() {
             const sidebar = document.getElementById('user-sidebar');
